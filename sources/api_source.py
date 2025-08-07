@@ -4,10 +4,11 @@ from sources.base_source import NewsSource  # adjust if your base class is elsew
 
 class APINewsSource(NewsSource):
     def __init__(self):
-        self.api_key = os.getenv("d2658f84f7a44271b02d62f4a1519678")
+        self.api_key = os.getenv("NEWSAPI_KEY")
         self.url = "https://newsapi.org/v2/top-headlines?country=us"
 
-    def fetch(self):
+
+    def get_news(self):
         headers = {"Authorization": f"Bearer {self.api_key}"}
         response = requests.get(self.url, headers=headers)
 
@@ -23,3 +24,6 @@ class APINewsSource(NewsSource):
             ]
         else:
             raise Exception(f"API request failed: {response.status_code} {response.text}")
+
+    def fetch(self):
+        return self.get_news()
