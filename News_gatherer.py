@@ -50,4 +50,3 @@ elif args.destination == "pdf":
 else:
     print("[x] Invalid destination.")
 
-NEWS_API_KEY="your_actual_api_key_here"

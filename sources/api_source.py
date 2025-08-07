@@ -1,23 +1,25 @@
-import requests
-from .base_source import NewsSource
-from dotenv import load_dotenv
 import os
-
-# Load environment variables from .env file
-load_dotenv()
+import requests
+from sources.base_source import NewsSource  # adjust if your base class is elsewhere
 
 class APINewsSource(NewsSource):
     def __init__(self):
-        self.api_key = os.getenv("NEWS_API_KEY")
+        self.api_key = os.getenv("d2658f84f7a44271b02d62f4a1519678")
         self.url = "https://newsapi.org/v2/top-headlines?country=us"
 
-    def get_news(self):
+    def fetch(self):
         headers = {"Authorization": f"Bearer {self.api_key}"}
         response = requests.get(self.url, headers=headers)
-        
+
         if response.status_code == 200:
-            data = response.json()
-            articles = data.get("articles", [])
-            return [f"{a['title']} - {a.get('description', '')}" for a in articles]
+            articles = response.json().get("articles", [])
+            return [
+                {
+                    "title": article.get("title"),
+                    "description": article.get("description"),
+                    "url": article.get("url")
+                }
+                for article in articles
+            ]
         else:
-            return [f"Error fetching news: {response.status_code} - {response.text}"]
+            raise Exception(f"API request failed: {response.status_code} {response.text}")
